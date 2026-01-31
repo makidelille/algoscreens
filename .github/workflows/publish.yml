@@ -20,16 +20,19 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          channel: stable
 
-      - name: Install dependencies
-        run: flutter pub get
+      - name: Setup Flutter
+        run: |
+          git clone https://github.com/flutter/flutter.git --depth 1 -b beta _flutter
+          echo "${GITHUB_WORKSPACE}/_flutter/bin" >> ${GITHUB_PATH}
+
+      - name: Install
+        run: |
+          flutter config --enable-web
+          flutter pub get
 
       - name: Build web app
-        run: flutter build web
+        run: flutter build web --base-href="/algoscreens/"
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
